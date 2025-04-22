@@ -10,9 +10,14 @@ class PropertySeeder extends Seeder
 {
     public function run()
     {
+        // Truncate the table (delete all records)
+        Property::truncate();
         $faker = Faker::create();
 
-        foreach (range(1, 50) as $i) {
+        foreach (range(1, 5) as $i) {
+            $startDate = $faker->dateTimeBetween('-1 year', 'now');
+            $endDate = $faker->dateTimeBetween($startDate, '+1 year');
+
             Property::create([
                 'unit_number' => $faker->optional()->buildingNumber,
                 'street_number' => $faker->buildingNumber,
@@ -21,6 +26,8 @@ class PropertySeeder extends Seeder
                 'state' => $faker->state,
                 'postcode' => $faker->postcode,
                 'country' => $faker->country,
+                'contract_start_date' => $startDate->format('Y-m-d'),
+                'contract_end_date' => $endDate->format('Y-m-d'),
             ]);
         }
     }

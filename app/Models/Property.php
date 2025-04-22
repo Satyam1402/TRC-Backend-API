@@ -16,7 +16,9 @@ class Property extends Model
         'suburb',
         'state',
         'postcode',
-        'country'
+        'country',
+        'contract_start_date',
+        'contract_end_date',
     ];
 
 }

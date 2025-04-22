@@ -44,6 +44,8 @@
                                             <th>State</th>
                                             <th>Postcode</th>
                                             <th>Country</th>
+                                            <th>Contract Start Date</th>
+                                            <th>Contract End Date</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -93,6 +95,8 @@
                 { data: 'state', name: 'state' },
                 { data: 'postcode', name: 'postcode' },
                 { data: 'country', name: 'country' },
+                { data: 'contract_start_date', name: 'contract_start_date' },
+                { data: 'contract_end_date', name: 'contract_end_date' },
                 ],
                 search: {
                     smart: true,

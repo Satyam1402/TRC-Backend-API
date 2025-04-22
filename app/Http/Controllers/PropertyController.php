@@ -29,6 +29,8 @@ class PropertyController extends Controller
                 'state',
                 'postcode',
                 'country',
+                'contract_start_date',
+                'contract_end_date',
                 'created_at',
                 'updated_at',
             ];
@@ -39,6 +41,12 @@ class PropertyController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('contract_start_date', function ($row) {
+                    return $row->contract_start_date ? Carbon::parse($row->contract_start_date)->format('d-m-Y') : '';
+                })
+                ->addColumn('contract_end_date', function ($row) {
+                    return $row->contract_end_date ? Carbon::parse($row->contract_end_date)->format('d-m-Y') : '';
+                })
                 // ->addColumn('created_at', function ($row) {
                 //     return Carbon::parse($row->created_at)->format('d-m-Y h:i A');
                 // })
