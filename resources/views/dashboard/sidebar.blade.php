@@ -12,7 +12,7 @@
         </ul>
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="javascript:void(0);" class="nav-link">
+                <a href="{{ route('users.index') }}" class="nav-link {{ request()->is('users') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-user"></i>
                     <p>Users</p>
                 </a>
