@@ -28,7 +28,7 @@
         </ul>
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="javascript:void(0);" class="nav-link">
+                <a href="{{ route('utilities.index') }}" class="nav-link {{ request()->is('utilities*') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-toolbox"></i>
                     <p>Utilities</p>
                 </a>

@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UtilityController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\DashboardController;
 
 
@@ -25,7 +27,13 @@ Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/get-properties', [PropertyController::class, 'getProperties'])->name('properties.get');
 
 
-// Routes for creating new Users
+// Routes for creating Utilities
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('utilities/datatable', [UtilityController::class, 'getUtilities'])->name('utilities.datatable');
+    Route::resource('utilities', UtilityController::class);
+});
+
+
 // Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 //     Route::get('all/users', [All_Users_data_Controller::class, 'index'])->name('daily_reports.index');
 //     Route::get('user/data', [All_Users_data_Controller::class, 'getData'])->name('daily_reports.data');
