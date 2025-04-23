@@ -73,6 +73,7 @@ class CompanyController extends Controller
         return redirect()->route('companies.index')->with('success', 'Company created successfully.');
     }
 
+     // "show" route is defined for resource controller but its mandatory to define it
     public function show($id)
     {
         //
