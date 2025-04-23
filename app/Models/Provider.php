@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Utility extends Model
+class Provider extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'utility_id'];
 
-    public function providers()
+    public function utility()
     {
-        return $this->hasMany(Provider::class);
+        return $this->belongsTo(Utility::class);
     }
-
 }

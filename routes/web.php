@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\DashboardController;
 
 
@@ -35,6 +36,12 @@ Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.get')
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('utilities/datatable', [UtilityController::class, 'getUtilities'])->name('utilities.datatable');
     Route::resource('utilities', UtilityController::class);
+});
+
+// Routes for creating Providers
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('providers/datatable', [ProviderController::class, 'getProviders'])->name('providers.datatable');
+    Route::resource('providers', ProviderController::class);
 });
 
 
