@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ProviderController;
@@ -42,6 +43,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('providers/datatable', [ProviderController::class, 'getProviders'])->name('providers.datatable');
     Route::resource('providers', ProviderController::class);
+});
+
+// Routes for creating companies
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('companies/datatable', [CompanyController::class, 'getCompanies'])->name('companies.getCompanies');
+    Route::resource('companies', CompanyController::class);
 });
 
 

@@ -44,8 +44,8 @@
         </ul>
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="javascript:void(0);" class="nav-link">
-                    <i class="nav-icon fas fa-building"></i>
+                <a href="{{ route('companies.index') }}" class="nav-link {{ request()->routeIs('company.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-network-wired"></i>
                     <p>Companies</p>
                 </a>
             </li>
