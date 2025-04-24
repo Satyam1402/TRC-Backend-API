@@ -12,6 +12,7 @@ use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SocialMediaChallengeController;
 
 
 Route::get('/', function () {
@@ -51,6 +52,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('companies', CompanyController::class);
 });
 
+// Routes for creating social-media-challenges
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('social-media-challenges/list', [SocialMediaChallengeController::class, 'getSocialMediaChallenges'])->name('social-media-challenges.list');
+    Route::resource('social-media-challenges', SocialMediaChallengeController::class);
+});
 
 // Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 //     Route::get('all/users', [All_Users_data_Controller::class, 'index'])->name('daily_reports.index');

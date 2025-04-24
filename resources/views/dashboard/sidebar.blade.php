@@ -52,7 +52,7 @@
         </ul>
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-                <a href="javascript:void(0);" class="nav-link">
+                <a href="{{ route('social-media-challenges.index') }}" class="nav-link {{ request()->is('social-media-challenges') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-bullhorn"></i>
                     <p>Social Media Challenges</p>
                 </a>
