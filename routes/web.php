@@ -12,6 +12,7 @@ use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\SocialMediaChallengeController;
 
 
@@ -56,6 +57,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('social-media-challenges/list', [SocialMediaChallengeController::class, 'getSocialMediaChallenges'])->name('social-media-challenges.list');
     Route::resource('social-media-challenges', SocialMediaChallengeController::class);
+});
+
+// Routes for creating Announcements
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('announcements/list', [AnnouncementController::class, 'getAnnouncements'])->name('announcements.list');
+    Route::resource('announcements', AnnouncementController::class);
 });
 
 // Route::middleware(['auth:sanctum', 'verified'])->group(function () {

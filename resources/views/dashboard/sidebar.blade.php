@@ -45,16 +45,26 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
                 <a href="{{ route('companies.index') }}" class="nav-link {{ request()->routeIs('company.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-network-wired"></i>
+                    <i class="nav-icon fas fas fa-building"></i>
                     <p>Companies</p>
                 </a>
             </li>
         </ul>
+         <!-- SocialMediaChallenge -->
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
                 <a href="{{ route('social-media-challenges.index') }}" class="nav-link {{ request()->is('social-media-challenges') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-bullhorn"></i>
                     <p>Social Media Challenges</p>
+                </a>
+            </li>
+        </ul>
+         <!-- Announcements -->
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+                <a href="{{ route('announcements.index') }}" class="nav-link {{ request()->is('announcements') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-bell"></i>
+                    <p>Announcements</p>
                 </a>
             </li>
         </ul>
