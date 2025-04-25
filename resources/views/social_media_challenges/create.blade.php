@@ -55,7 +55,7 @@
 
                                     <!-- Link -->
                                     <div class="form-group">
-                                        <label for="social_link">Social-Link (Optional)</label>
+                                        <label for="social_link">Link (Optional)</label>
                                         <input type="url" class="form-control" id="social_link" name="social_link" placeholder="https://example.com">
                                     </div>
 

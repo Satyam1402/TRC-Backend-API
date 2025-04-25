@@ -56,7 +56,7 @@
 
                                      <!-- Link -->
                                      <div class="form-group">
-                                        <label for="social_link">social-Link</label>
+                                        <label for="social_link">Link</label>
                                         <input type="url" class="form-control" id="social_link" name="social_link" value="{{ old('link', $social_media_challenge->social_link) }}" placeholder="https://example.com">
                                     </div>
 

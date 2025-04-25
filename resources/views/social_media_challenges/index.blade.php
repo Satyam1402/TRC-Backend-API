@@ -41,7 +41,7 @@
                                             <th>Title</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
-                                            <th>Social-Link</th>
+                                            <th>Link</th>
                                             <th style="text-align: right;">Action</th>
                                         </tr>
                                     </thead>

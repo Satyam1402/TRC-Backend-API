@@ -40,7 +40,7 @@
                                             <th style="width: 60px; text-align: center;">No.</th>
                                             <th>Image</th>
                                             <th>Text</th>
-                                            <th>Link</th>
+                                            <th style="width: 300px;">Link</th>
                                             <th style="text-align: right;">Action</th>
                                         </tr>
                                     </thead>

@@ -39,12 +39,12 @@ class SocialMediaChallengeController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('social_link', function ($row) {
-                    if ($row->social_link) {
-                        return '<a href="' . $row->social_link . '" target="_blank">' . 'click' . '</a>';
-                    }
-                    return 'No Social-Link';
-                })
+                // ->editColumn('social_link', function ($row) {
+                //     if ($row->social_link) {
+                //         return '<a href="' . $row->social_link . '" target="_blank">' . 'click' . '</a>';
+                //     }
+                //     return 'No Social-Link';
+                // })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('social-media-challenges.edit', $row->id);
                     $deleteUrl = route('social-media-challenges.destroy', $row->id);
@@ -64,7 +64,7 @@ class SocialMediaChallengeController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['action', 'social_link'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
     }

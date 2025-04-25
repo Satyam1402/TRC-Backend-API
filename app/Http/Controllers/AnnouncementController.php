@@ -51,12 +51,12 @@ class AnnouncementController extends Controller
                     }
                     return 'No Image';
                 })
-                ->editColumn('link', function ($row) {
-                    if ($row->link) {
-                        return '<a href="' . $row->link . '" target="_blank">' . 'click' . '</a>';
-                    }
-                    return 'No Link';
-                })
+                // ->editColumn('link', function ($row) {
+                //     if ($row->link) {
+                //         return '<a href="' . $row->link . '" target="_blank">' . 'click' . '</a>';
+                //     }
+                //     return 'No Link';
+                // })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('announcements.edit', $row->id);
                     $deleteUrl = route('announcements.destroy', $row->id);
@@ -76,7 +76,7 @@ class AnnouncementController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['image', 'link','action'])
+                ->rawColumns(['image','action'])
                 ->make(true);
         }
     }
