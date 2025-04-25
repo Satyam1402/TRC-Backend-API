@@ -9,5 +9,5 @@ class SocialMediaChallenge extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'start_date', 'end_date'];
+    protected $fillable = ['title', 'start_date', 'end_date','social_link'];
 }

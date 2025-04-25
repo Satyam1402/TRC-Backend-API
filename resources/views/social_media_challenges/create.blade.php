@@ -53,6 +53,12 @@
                                         <input type="date" class="form-control" id="end_date" name="end_date" required>
                                     </div>
 
+                                    <!-- Link -->
+                                    <div class="form-group">
+                                        <label for="social_link">Social-Link (Optional)</label>
+                                        <input type="url" class="form-control" id="social_link" name="social_link" placeholder="https://example.com">
+                                    </div>
+
                                     <!-- Status -->
                                     {{-- <div class="form-group">
                                         <label for="status">Status</label>

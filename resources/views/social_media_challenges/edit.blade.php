@@ -54,6 +54,12 @@
                                         <input type="date" class="form-control" id="end_date" name="end_date" value="{{ old('end_date', $social_media_challenge->end_date) }}" required>
                                     </div>
 
+                                     <!-- Link -->
+                                     <div class="form-group">
+                                        <label for="social_link">social-Link</label>
+                                        <input type="url" class="form-control" id="social_link" name="social_link" value="{{ old('link', $social_media_challenge->social_link) }}" placeholder="https://example.com">
+                                    </div>
+
                                     <!-- Status -->
                                     {{-- <div class="form-group">
                                         <label for="status">Status <span class="text-danger">*</span></label>

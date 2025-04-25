@@ -41,6 +41,7 @@
                                             <th>Title</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
+                                            <th>Social-Link</th>
                                             <th style="text-align: right;">Action</th>
                                         </tr>
                                     </thead>
@@ -86,6 +87,7 @@
                     { data: 'title', name: 'title' },
                     { data: 'start_date', name: 'start_date' },
                     { data: 'end_date', name: 'end_date' },
+                    { data: 'social_link', name: 'social_link' },
                     { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-right', width: '60px' },
                 ],
                 search: {

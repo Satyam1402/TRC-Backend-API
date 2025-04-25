@@ -27,7 +27,9 @@ class SocialMediaChallengeController extends Controller
                 'title',
                 'start_date',
                 'end_date',
+                'social_link',
                 'created_at',
+                'updated_at',
             ];
 
             $sortColumn = $columns[$sortColumnIndex];
@@ -37,6 +39,12 @@ class SocialMediaChallengeController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('social_link', function ($row) {
+                    if ($row->social_link) {
+                        return '<a href="' . $row->social_link . '" target="_blank">' . 'click' . '</a>';
+                    }
+                    return 'No Social-Link';
+                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('social-media-challenges.edit', $row->id);
                     $deleteUrl = route('social-media-challenges.destroy', $row->id);
@@ -56,7 +64,7 @@ class SocialMediaChallengeController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'social_link'])
                 ->make(true);
         }
     }
@@ -72,6 +80,7 @@ class SocialMediaChallengeController extends Controller
             'title' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'social_link' => 'nullable|url',
         ]);
 
         SocialMediaChallenge::create($request->all());
@@ -96,6 +105,7 @@ class SocialMediaChallengeController extends Controller
             'title' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'social_link' => 'nullable|url',
         ]);
 
         $social_media_challenge->update($request->all());

@@ -95,7 +95,17 @@ class AnnouncementController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('announcements','public');
+
+            // $file = $request->file('image');
+            // $extension = $file->hashName(); // Get the hash name of the file
+            // $extension = $file->extension();
+            // $extension = $file->getClientMimeType(); // Get the MIME type of the file
+            // $extension = $file->getClientOriginalExtension();
+            // return $extension;
+            // $fileName = time() . '_' . $file->getClientOriginalName();  // Generate a same file name that user uploaded with time.
+            // $data['image'] = $request->file('image')->store('announcements','public'); //first way to store image using store()
+            // $data['image'] = $request->image->storeAs('announcements', $fileName,'local'); //second way to store image storeAs()
+            $data['image'] = $request->image->store('announcements','public');  // Store image in the local disk
             // Return image path just for debugging
             // return $data['image'];
         }
