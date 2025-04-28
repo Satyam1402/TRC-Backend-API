@@ -41,33 +41,45 @@ class PropertyController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('contract_start_date', function ($row) {
+                ->editColumn('contract_start_date', function ($row) {
                     return $row->contract_start_date ? Carbon::parse($row->contract_start_date)->format('d-m-Y') : '';
                 })
-                ->addColumn('contract_end_date', function ($row) {
+                ->editColumn('contract_end_date', function ($row) {
                     return $row->contract_end_date ? Carbon::parse($row->contract_end_date)->format('d-m-Y') : '';
                 })
+
+                ->filterColumn('contract_start_date', function($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(contract_start_date, '%d-%m-%Y') like ?", ["%{$keyword}%"]);
+                })
+                ->filterColumn('contract_end_date', function($query, $keyword) {
+                    $query->whereRaw("DATE_FORMAT(contract_end_date, '%d-%m-%Y') like ?", ["%{$keyword}%"]);
+                })
+
                 // ->addColumn('created_at', function ($row) {
                 //     return Carbon::parse($row->created_at)->format('d-m-Y h:i A');
                 // })
                 // ->addColumn('updated_at', function ($row) {
                 //     return Carbon::parse($row->updated_at)->format('d-m-Y h:i A');
                 // })
-                // ->addColumn('action', function ($row) {
-                //     return '
-                //         <div class="d-flex">
-                //             <a href="' . route('properties.edit', $row->id) . '" class="mb-1 btn btn-primary btn-sm mr-2">
-                //                 <i class="fas fa-edit"></i>
-                //             </a>
-                //             <a href="#" class="mb-1 btn btn-danger btn-sm" onclick="confirmDelete(\'' . route('properties.destroy', $row->id) . '\');">
-                //                 <i class="fas fa-trash"></i>
-                //             </a>
-                //         </div>
-                //     ';
-                // })
-                ->rawColumns([])
+                ->addColumn('action', function ($row) {
+                    // Print button
+                    $printButton = '<button class="btn btn-primary btn-sm" onclick="printPropertyDetails(' . $row->id . ')">
+                                        <i class="fas fa-print"></i>
+                                    </button>';
+
+                    return $printButton;
+                })
+                ->rawColumns(['contract_start_date','contract_end_date','action']) // include 'action' here if you enable it
                 ->make(true);
         }
     }
+
+    public function printProperty($id)
+    {
+        $property = Property::findOrFail($id);
+
+        return view('properties.print', compact('property'));
+    }
+
 
 }

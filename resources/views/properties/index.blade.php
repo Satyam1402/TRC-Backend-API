@@ -46,6 +46,7 @@
                                             <th>Country</th>
                                             <th>Contract Start Date</th>
                                             <th>Contract End Date</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -97,6 +98,12 @@
                 { data: 'country', name: 'country' },
                 { data: 'contract_start_date', name: 'contract_start_date' },
                 { data: 'contract_end_date', name: 'contract_end_date' },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,className: 'text-right', width: '30px'
+                },
                 ],
                 search: {
                     smart: true,
@@ -105,6 +112,18 @@
                 }
             });
         });
+        // Function to view property details (if needed)
+        // function viewPropertyDetails(id) {
+        //     // Replace the alert with a real view property function
+        //     alert('View Property Details for Property ID: ' + id);
+        // }
+
+        // Function to print property details
+        function printPropertyDetails(id) {
+            var url = 'trc/properties/print/' + id;  // Make sure the print URL matches the route for properties
+            var printWindow = window.open(url, '_blank');  // Open in a new tab or window
+            printWindow.focus();  // Focus on the print window
+        }
     </script>
 @endsection
 @section('ajax')
@@ -124,6 +143,4 @@
             });
         }
     </script>
-
-
 @endsection

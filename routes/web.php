@@ -28,12 +28,18 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Routes for managing properties
-Route::get('/properties', [PropertyController::class, 'index']);
-Route::get('/get-properties', [PropertyController::class, 'getProperties'])->name('properties.get');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/properties', [PropertyController::class, 'index']);
+    Route::get('/get-properties', [PropertyController::class, 'getProperties'])->name('properties.get');
+    Route::get('/trc/properties/print/{id}', [PropertyController::class, 'printProperty'])->name('properties.print');
+});
 
 // Routes for managing Users
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.get');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.get');
+    Route::get('/trc/users/print/{id}', [UserController::class, 'printUser'])->name('users.print');
+});
 
 // Routes for creating Utilities
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {

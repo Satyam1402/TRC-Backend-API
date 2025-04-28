@@ -45,13 +45,25 @@ class UserController extends Controller
                 //     return Carbon::parse($row->updated_at)->format('d-m-Y h:i A');
                 // })
                 ->addColumn('action', function ($row) {
-                    return '<button class="btn btn-info btn-sm" onclick="viewUserDetails(' . $row->id . ')">
-                                <i class="fas fa-eye"></i> Properties
-                            </button>';
+                    $viewButton = '<button class="btn btn-info btn-sm">
+                                         <i class="fas fa-eye"></i> Properties
+                    </button>';
+
+                    $printButton = '<button class="btn btn-primary btn-sm" onclick="printUserDetails(' . $row->id . ')">
+                                        <i class="fas fa-print"></i>
+                                    </button>';
+
+                    return $viewButton . ' ' . $printButton;
                 })
-                ->rawColumns(['action']) // include 'action' here if you enable it
+                ->rawColumns(['action'])
                 ->make(true);
         }
+    }
+
+    public function printUser($id)
+    {
+        $user = User::findOrFail($id);
+        return view('users.print', compact('user'));
     }
 
 }

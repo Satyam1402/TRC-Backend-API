@@ -92,7 +92,7 @@
                     data: 'action',
                     name: 'action',
                     orderable: false,
-                    searchable: false,className: 'text-right', width: '120px'
+                    searchable: false,className: 'text-right', width: '200px'
                 },
                 ],
                 search: {
@@ -102,8 +102,24 @@
                 }
             });
         });
+            // function viewUserDetails(id) {
+            //     // Your existing function to view properties
+            //     alert('View Properties of User ID: ' + id);
+            // }
+
+            function printUserDetails(id) {
+                var url = 'trc/users/print/' + id; // Update the URL if needed
+                var printWindow = window.open(url, '_blank');
+                printWindow.focus();
+            }
+            // function printUserDetails(id) {
+            //     var url = '/users/print/' + id; // Update the URL if needed
+            //     window.location.href = url;  // This will navigate to the print page in the same tab
+            // }
     </script>
 @endsection
+
+
 @section('ajax')
     <script>
         function confirmDelete(url) {
