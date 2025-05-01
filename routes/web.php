@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/properties', [PropertyController::class, 'index']);
     Route::get('/get-properties', [PropertyController::class, 'getProperties'])->name('properties.get');
     Route::get('/trc/properties/print/{id}', [PropertyController::class, 'printProperty'])->name('properties.print');
+    Route::get('/users/{user}/properties', [PropertyController::class, 'userProperties'])->name('users.properties');
 });
 
 // Routes for managing Users
@@ -39,6 +40,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/get-users', [UserController::class, 'getUsers'])->name('users.get');
     Route::get('/trc/users/print/{id}', [UserController::class, 'printUser'])->name('users.print');
+    Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
 });
 
 // Routes for creating Utilities

@@ -28,6 +28,7 @@ class UserController extends Controller
                 'last_name',
                 'email',
                 'phone',
+                'status',
                 'created_at',
                 'updated_at',
             ];
@@ -44,10 +45,18 @@ class UserController extends Controller
                 // ->addColumn('updated_at', function ($row) {
                 //     return Carbon::parse($row->updated_at)->format('d-m-Y h:i A');
                 // })
+                // ->addColumn('status', function ($row) {
+                //     if ($row->status == 'active') {
+                //         return '<button class="btn btn-success btn-sm toggle-status" data-id="' . $row->id . '">Active</button>';
+                //     } else {
+                //         return '<button class="btn btn-danger btn-sm toggle-status" data-id="' . $row->id . '">Inactive</button>';
+                //     }
+                // })
                 ->addColumn('action', function ($row) {
                     $viewButton = '<button class="btn btn-info btn-sm">
                                          <i class="fas fa-eye"></i> Properties
                     </button>';
+                    // $viewButton = '<a href="' . route('users.properties', $row->id) . '" class="btn btn-info btn-sm">
 
                     $printButton = '<button class="btn btn-primary btn-sm" onclick="printUserDetails(' . $row->id . ')">
                                         <i class="fas fa-print"></i>
@@ -65,5 +74,15 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         return view('users.print', compact('user'));
     }
+
+    // public function toggleStatus(Request $request)
+    // {
+    //     $user = User::findOrFail($request->id);
+
+    //     $user->status = $user->status === 'active' ? 'inactive' : 'active';
+    //     $user->save();
+
+    //     return response()->json(['message' => 'User status updated successfully']);
+    // }
 
 }

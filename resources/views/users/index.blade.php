@@ -41,6 +41,7 @@
                                             <th>Last Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
+                                            {{-- <th>Status</th> --}}
                                             <th style="text-align: right;">Action</th>
                                         </tr>
                                     </thead>
@@ -140,3 +141,81 @@
 
 
 @endsection
+
+  {{-- <script>
+        $(document).ready(function() {
+             var table = $('#data-table').DataTable({  //assign the datatable to a variable
+                 responsive: true,
+                 processing: true,
+                 serverSide: true,
+                 ajax: "{{ route('users.get') }}",
+                 pageLength: 15,
+                 lengthMenu: [
+                     [15, 30, 50, 100, 500, -1],
+                     [15, 30, 50, 100, 500, "All"]
+                 ],
+                 order: [
+                     [0, 'desc']
+                 ],
+                 columns: [
+                     { data: 'id', name: 'id' },
+                     { data: 'first_name', name: 'first_name' },
+                     { data: 'last_name', name: 'last_name' },
+                     { data: 'email', name: 'email' },
+                     { data: 'phone', name: 'phone' },
+                     {
+                         data: 'status',
+                         name: 'status',
+                         orderable: false,
+                         searchable: false,
+                         className: 'text-center',
+                         width: '100px'
+                     },
+                     {
+                         data: 'action',
+                         name: 'action',
+                         orderable: false,
+                         searchable: false,
+                         className: 'text-right',
+                         width: '120px'
+                     },
+                 ],
+                 search: {
+                     smart: true,
+                     regex: false,
+                     caseInsensitive: true
+                 }
+             });
+
+             //  Move this inside document ready
+             $(document).on('click', '.toggle-status', function(){
+                 var user_id = $(this).data('id');
+
+                 $.ajax({
+                     url: "{{ route('users.toggleStatus') }}",
+                     type: 'POST',
+                     data: {
+                         _token: '{{ csrf_token() }}',
+                         id: user_id,
+                     },
+                     beforeSend: function() {
+                         Swal.fire({
+                             title: 'Please Wait...',
+                             allowOutsideClick: false,
+                             didOpen: () => {
+                                 Swal.showLoading()
+                             }
+                         });
+                     },
+                     success: function(response){
+                         table.ajax.reload(null, false); //now table is defined
+                         Swal.fire('Success!', response.message, 'success');
+                     },
+                     error: function(){
+                         Swal.fire('Error!', 'Something went wrong.', 'error');
+                     }
+                 });
+             });
+
+         });
+    </script> --}}

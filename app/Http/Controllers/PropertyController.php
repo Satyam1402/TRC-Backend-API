@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Property;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Property;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class PropertyController extends Controller
 {
@@ -22,6 +23,7 @@ class PropertyController extends Controller
             // Map DataTable columns to DB fields
             $columns = [
                 'id',
+                'user_id',
                 'unit_number',
                 'street_number',
                 'street_name',
@@ -81,5 +83,10 @@ class PropertyController extends Controller
         return view('properties.print', compact('property'));
     }
 
+    public function userProperties($id)
+    {
+        $user = User::with('properties')->findOrFail($id);
+        return view('properties.user_properties', compact('user'));
+    }
 
 }
