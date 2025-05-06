@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
+use App\Http\Controllers\Api\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,9 @@ Route::prefix('auth')->group(function () {
 
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword'])
          ->middleware('throttle:3,1'); // 5 password reset attempts per minute
+});
+
+Route::prefix('countries')->middleware('auth:sanctum')->group(function () {
+    // Get Country List
+    Route::get('/', [LocationController::class, 'getCountryList']);
 });
