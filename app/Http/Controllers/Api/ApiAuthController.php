@@ -196,7 +196,7 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'OTP verification failed',
-                'error' => $e->getMessage() // optional: remove in production
+                // 'error' => $e->getMessage() // optional: remove in production
             ], 200); // Force 200 on exception
         }
     }
@@ -205,14 +205,14 @@ class ApiAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'reset_token'  => 'required',
-            'new_password' => 'required|min:8'
+            'new_password' => 'required|min:3'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed.',
-                'errors' => $validator->errors()
+                // 'errors' => $validator->errors()
             ], 200); // Force HTTP 200
         }
 

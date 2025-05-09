@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
@@ -73,6 +73,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('announcements', AnnouncementController::class);
 });
 
+Route::get('/clear-config', function () {
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    return response()->json(['message' => 'All caches cleared!']);
+});
 // Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 //     Route::get('all/users', [All_Users_data_Controller::class, 'index'])->name('daily_reports.index');
 //     Route::get('user/data', [All_Users_data_Controller::class, 'getData'])->name('daily_reports.data');
