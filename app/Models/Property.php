@@ -15,11 +15,20 @@ class Property extends Model
         'street_number',
         'street_name',
         'suburb',
-        'state',
+        'state_id',
         'postcode',
-        'country',
+        'country_id',
         'contract_start_date',
         'contract_end_date',
     ];
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
 }

@@ -10,18 +10,75 @@ use Illuminate\Support\Facades\Log;
 
 class PropertyController extends Controller
 {
+    // public function addProperty(Request $request)
+    // {
+    //     // Validate incoming request data
+    //     $validator = Validator::make($request->all(), [
+    //         'unit_number'     => 'required|string|max:255',
+    //         'street_number'   => 'required|string|max:255',
+    //         'street_name'     => 'required|string|max:255',
+    //         'suburb'          => 'required|string|max:255',
+    //         'state'           => 'required|string|max:255',
+    //         'post_code'       => 'required|string|max:255',
+    //         'country'         => 'required|string|max:255',
+    //         'user_id'         => 'required|integer|exists:users,id', // Ensure valid user_id
+    //     ]);
+
+    //     // If validation fails, return error
+    //     if ($validator->fails()) {
+    //         Log::warning('Validation failed for addProperty', [
+    //             'errors' => $validator->errors()->all()
+    //         ]);
+
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => $validator->errors()->first(),
+    //         ], 200);
+    //     }
+
+    //     try {
+    //         // Create new property record
+    //         $property = Property::create([
+    //             'user_id'        => $request->user_id, // Use provided user_id
+    //             'unit_number'    => $request->unit_number,
+    //             'street_number'  => $request->street_number,
+    //             'street_name'    => $request->street_name,
+    //             'suburb'         => $request->suburb,
+    //             'state'          => $request->state,
+    //             'postcode'       => $request->post_code,
+    //             'country'        => $request->country,
+    //         ]);
+
+    //         // Return success response
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Property added successfully.',
+    //             'property' => $property,
+    //         ], 200);
+
+    //     } catch (\Exception $e) {
+    //         // Log error
+    //         Log::error('Error adding property: ' . $e->getMessage());
+
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Failed to add property. ' . $e->getMessage(),
+    //         ], 200);
+    //     }
+    // }
+
     public function addProperty(Request $request)
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'unit_number'     => 'required|string|max:255',
-            'street_number'   => 'required|string|max:255',
-            'street_name'     => 'required|string|max:255',
-            'suburb'          => 'required|string|max:255',
-            'state'           => 'required|string|max:255',
-            'post_code'       => 'required|string|max:255',
-            'country'         => 'required|string|max:255',
-            'user_id'         => 'required|integer|exists:users,id', // Ensure valid user_id
+            'unit_number'   => 'required|string|max:255',
+            'street_number' => 'required|string|max:255',
+            'street_name'   => 'required|string|max:255',
+            'suburb'        => 'required|string|max:255',
+            'state_id'      => 'required|integer|exists:states,id',  // Ensure valid state_id
+            'country_id'    => 'required|integer|exists:countries,id', // Ensure valid country_id
+            'post_code'     => 'required|string|max:255',
+            'user_id'       => 'required|integer|exists:users,id',
         ]);
 
         // If validation fails, return error
@@ -38,22 +95,21 @@ class PropertyController extends Controller
 
         try {
             // Create new property record
-            $property = Property::create([
-                'user_id'        => $request->user_id, // Use provided user_id
-                'unit_number'    => $request->unit_number,
-                'street_number'  => $request->street_number,
-                'street_name'    => $request->street_name,
-                'suburb'         => $request->suburb,
-                'state'          => $request->state,
-                'postcode'       => $request->post_code,
-                'country'        => $request->country,
+            Property::create([
+                'user_id'       => $request->user_id,
+                'unit_number'   => $request->unit_number,
+                'street_number' => $request->street_number,
+                'street_name'   => $request->street_name,
+                'suburb'        => $request->suburb,
+                'state_id'      => $request->state_id,
+                'country_id'    => $request->country_id,
+                'postcode'      => $request->post_code,
             ]);
 
-            // Return success response
+            // Return minimal response
             return response()->json([
                 'status' => 'success',
                 'message' => 'Property added successfully.',
-                'property' => $property,
             ], 200);
 
         } catch (\Exception $e) {
@@ -62,10 +118,11 @@ class PropertyController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to add property. ' . $e->getMessage(),
+                'message' => 'Failed to add property.',
             ], 200);
         }
     }
+
 }
 
 

@@ -39,6 +39,56 @@ class LocationController extends Controller
         }
     }
 
+    // public function getStateList(Request $request)
+    // {
+    //     // Log every request for debugging
+    //     Log::info('API Request received for /state_list', [
+    //         'method' => $request->method(),
+    //         'ip' => $request->ip(),
+    //         'query' => $request->query(),
+    //         'timestamp' => now()
+    //     ]);
+
+    //     try {
+    //         // Retrieve all states from the database
+    //         $states = State::all();
+
+    //         // Check if states exist
+    //         if ($states->isEmpty()) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'No states found.',
+    //             ], 200);
+    //         }
+
+    //         // Transform the states data to match the required format
+    //         $stateList = $states->map(function ($state) {
+    //             return [
+    //                 'id' => $state->id,
+    //                 'value' => $state->name, // Map 'name' to 'value'
+    //             ];
+    //         });
+
+    //         // Return the transformed response with the state list
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'state_list' => $stateList,
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         // Log the error
+    //         Log::error('Error retrieving states.', [
+    //             'message' => $e->getMessage(),
+    //             'timestamp' => now()
+    //         ]);
+
+    //         // Return the error response
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Failed to retrieve states.',
+    //         ], 200);
+    //     }
+    // }
+
     public function getStateList(Request $request)
     {
         // Log every request for debugging
@@ -50,14 +100,21 @@ class LocationController extends Controller
         ]);
 
         try {
-            // Retrieve all states from the database
-            $states = State::all();
+            // Get the country_id from query parameters or form-data
+            $countryId = $request->input('country_id');
+
+            // Validate the country_id if provided
+            if ($countryId) {
+                $states = State::where('country_id', $countryId)->get();
+            } else {
+                $states = State::all();
+            }
 
             // Check if states exist
             if ($states->isEmpty()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'No states found.',
+                    'message' => 'No states found for the specified country.',
                 ], 200);
             }
 
@@ -74,6 +131,7 @@ class LocationController extends Controller
                 'status' => 'success',
                 'state_list' => $stateList,
             ], 200);
+            
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error retrieving states.', [
@@ -88,5 +146,4 @@ class LocationController extends Controller
             ], 200);
         }
     }
-
 }
