@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\JwtAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,20 +29,53 @@ Route::prefix('auth')->group(function () {
          ->middleware('throttle:5,1'); // 5 OTP attempts per minute
 
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword'])
-         ->middleware('throttle:3,1'); // 5 password reset attempts per minute
+         ->middleware('throttle:3,1'); // 5 password reset attempts per minute    
 });
 
 Route::prefix('countries')->group(function () {
-    // Get Country List
     Route::get('/', [LocationController::class, 'getCountryList']);
     Route::get('/state_list', [LocationController::class, 'getStateList']);
 });
 
-    // Property Routes (Protected by Sanctum Authentication)
-    Route::middleware('auth:sanctum')->group(function () {
-         // Add Property (Requires Authentication)
-         Route::post('/add_property', [PropertyController::class, 'addProperty']);
-     });
+Route::prefix('properties')->group(function () {
+    Route::post('/add', [PropertyController::class, 'addProperty'])
+         ->middleware('throttle:5,1'); // You can adjust this as needed
+});
+
+// Property Routes (Protected by Sanctum Authentication)
+// Route::middleware('auth:sanctum')->group(function () {
+//      Route::post('/add_property', [PropertyController::class, 'addProperty']);
+// });
+
+// Route::group(['middleware'=>'api','prefix'=>'auth'],function($router){
+//     Route::post('/register', [JwtAuthController::class, 'register']);
+//     Route::post('/login', [JwtAuthController::class, 'login']);
+//     Route::post('/send-otp', [JwtAuthController::class, 'sendOtp']);
+//     Route::post('/verify-otp', [JwtAuthController::class, 'verifyOtp']);
+//     Route::post('/reset-password', [JwtAuthController::class, 'resetPassword']);
+// });
+
+// Route::prefix('jwt')->group(function () {
+//     Route::post('/register', [JwtAuthController::class, 'register']);
+//     Route::post('/login', [JwtAuthController::class, 'login']);
+//     Route::post('/send-otp', [JwtAuthController::class, 'sendOtp']);
+//     Route::post('/verify-otp', [JwtAuthController::class, 'verifyOtp']);
+//     Route::post('/reset-password', [JwtAuthController::class, 'resetPassword']);
+// });
+
+// JWT Protected Routes
+// Route::middleware(['jwt.auth'])->group(function () {
+//     Route::post('/refresh-token', [JwtAuthController::class, 'refreshToken']);
+//     Route::post('/add_property', [PropertyController::class, 'addProperty']);
+// });
+
+// Route::post('/refresh-token', function () {
+//     $token = JWTAuth::parseToken()->refresh();
+//     return response()->json([
+//         'status' => 'success',
+//         'token' => $token,
+//     ]);
+// });
  
 //  Route::get('/debug-token', function (Request $request) {
 //     $authHeader = $request->header('Authorization');

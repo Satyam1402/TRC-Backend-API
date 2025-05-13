@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ApiAuthController extends Controller
 {
-   public function register(Request $request)
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
@@ -31,7 +31,8 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid input. Please check the information and try again.',
-            ], 200);
+                // 'errors' => $validator->errors()
+            ], 200); // Force 200 on validation error
         }
 
         try {
@@ -45,6 +46,8 @@ class ApiAuthController extends Controller
                 'user_role'  => 'tenant'
             ]);
 
+            $token = $user->createToken('API Token')->plainTextToken;
+
             return response()->json([
                 'status' => 'success',
                 'userinfo' => [
@@ -52,6 +55,7 @@ class ApiAuthController extends Controller
                     'name'    => $user->name,
                     'email'   => $user->email,
                     'phone'   => $user->phone,
+                    'token'   => $token
                 ]
             ], 200);
 
@@ -60,6 +64,7 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Registration failed. Please try again.',
+                // 'error' => $e->getMessage()
             ], 200);
         }
     }
@@ -75,17 +80,19 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid input. Please check the information and try again.',
-            ], 200);
+                // 'errors' => $validator->errors()
+            ], 200); // Force 200 for validation errors
         }
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid credentials'
-            ], 200);
+            ], 200); // Force 200 for invalid login
         }
+
+        $user = Auth::user();
+        $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
             'status' => 'success',
@@ -94,10 +101,10 @@ class ApiAuthController extends Controller
                 'name'    => $user->name,
                 'email'   => $user->email,
                 'phone'   => $user->phone,
+                'token'   => $token
             ]
-        ], 200);
+        ], 200); // Explicitly returning 200 for consistency
     }
-
 
     public function sendOtp(Request $request)
     {
@@ -111,29 +118,38 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid input. Please check the information and try again.',
-            ], 200);
+                // 'errors' => $validator->errors()
+            ], 200); // Force 200 on validation error
         }
 
         try {
-            $user = User::where('email', $request->email)->first();
-            $plainOtp = $user->generateOtp(); // Generate and save OTP
+            $user = User::where('email', $request->email)->firstOrFail();
+
+            // Generate OTP and retrieve the plain OTP
+            $plainOtp = $user->generateOtp(); // This method should return the OTP
+
             Mail::to($user->email)->send(new OtpMail($plainOtp));
+
+            Log::info("OTP sent to {$user->email}");
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'OTP sent to your email',
-            ], 200);
+                'data' => [
+                    'otp_expiry' => $user->otp_expiry->format('Y-m-d H:i:s')
+                ]
+            ], 200); // Explicitly 200 on success
 
         } catch (\Exception $e) {
             Log::error('OTP send error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to send OTP.',
-            ], 200);
+                'message' => 'Failed to send OTP. Please try again.',
+                // 'error' => $e->getMessage() // You can hide this in production
+            ], 200); // Force 200 on exception
         }
     }
-
 
     public function verifyOtp(Request $request)
     {
@@ -146,23 +162,33 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid input. Please check the information and try again.',
-            ], 200);
+                // 'errors' => $validator->errors()
+            ], 200); // Force 200 on validation failure
         }
 
         try {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->firstOrFail();
 
             if (!$user->validateOtp($request->otp)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Invalid or expired OTP'
-                ], 200);
+                ], 200); // 200 for OTP mismatch
             }
+
+            $otpExpiry = $user->otp_expiry;
+            $otpToken = $user->otp_token;
+
+            // $user->clearOtp(); // Uncomment if needed
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'OTP verified',
-            ], 200);
+                'data' => [
+                    'reset_token' => $otpToken,
+                    'token_expiry' => $otpExpiry ? $otpExpiry->format('Y-m-d H:i:s') : null
+                ]
+            ], 200); // Explicitly 200 on success
 
         } catch (\Exception $e) {
             Log::error('OTP verification error: ' . $e->getMessage());
@@ -170,54 +196,55 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'OTP verification failed',
-            ], 200);
+                // 'error' => $e->getMessage() // optional: remove in production
+            ], 200); // Force 200 on exception
         }
     }
 
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email'       => 'required|email|exists:users,email',
-            'new_password' => 'required|min:3',
-            'otp'          => 'required|digits:6',
+            'reset_token'  => 'required',
+            'new_password' => 'required|min:3'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed.',
-            ], 200);
+                // 'errors' => $validator->errors()
+            ], 200); // Force HTTP 200
         }
 
         try {
-            $user = User::where('email', $request->email)->first();
-
-            if (!$user->validateOtp($request->otp)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Invalid or expired OTP',
-                ], 200);
-            }
+            $user = User::where('otp_token', $request->reset_token)
+                        ->where('otp_expiry', '>', now())
+                        ->firstOrFail();
 
             $user->update([
                 'password'    => Hash::make($request->new_password),
                 'otp'         => null,
                 'otp_expiry'  => null,
+                'otp_token'   => null
             ]);
+
+            // Optional: revoke all tokens
+            $user->tokens()->delete();
+
+            Log::info("Password reset for {$user->email}");
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Password reset successfully',
-            ], 200);
-
+                'message' => 'Password reset successfully'
+            ], 200); // Explicit 200
         } catch (\Exception $e) {
             Log::error('Password reset error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to reset password',
-            ], 200);
+                'message' => 'Invalid or expired token',
+                'error'   => $e->getMessage() // Optional for debugging
+            ], 200); // Still 200 on failure
         }
     }
-
 }

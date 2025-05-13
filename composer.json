@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.29",
+        "tymon/jwt-auth": "^2.2",
         "yajra/laravel-datatables-oracle": "^10.11"
     },
     "require-dev": {

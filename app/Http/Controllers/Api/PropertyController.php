@@ -7,16 +7,9 @@ use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
-    public function __construct()
-    {
-        // Ensure that every method requires authentication using Sanctum
-        $this->middleware('auth:sanctum');
-    }
-
     public function addProperty(Request $request)
     {
         // Validate incoming request data
@@ -28,6 +21,7 @@ class PropertyController extends Controller
             'state'           => 'required|string|max:255',
             'post_code'       => 'required|string|max:255',
             'country'         => 'required|string|max:255',
+            'user_id'         => 'required|integer|exists:users,id', // Ensure valid user_id
         ]);
 
         // If validation fails, return error
@@ -43,12 +37,9 @@ class PropertyController extends Controller
         }
 
         try {
-            // Get the authenticated user (Sanctum handles token validation)
-            $user = auth()->user(); // This returns the authenticated user
-
-            // Create new property record and associate it with the authenticated user
+            // Create new property record
             $property = Property::create([
-                'user_id'        => $user->id,  // Use the authenticated user's ID
+                'user_id'        => $request->user_id, // Use provided user_id
                 'unit_number'    => $request->unit_number,
                 'street_number'  => $request->street_number,
                 'street_name'    => $request->street_name,
@@ -61,7 +52,8 @@ class PropertyController extends Controller
             // Return success response
             return response()->json([
                 'status' => 'success',
-                'message' => 'Property Added.',
+                'message' => 'Property added successfully.',
+                'property' => $property,
             ], 200);
 
         } catch (\Exception $e) {
@@ -70,107 +62,128 @@ class PropertyController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to add property.',
+                'message' => 'Failed to add property. ' . $e->getMessage(),
             ], 200);
         }
     }
 }
 
+
+// namespace App\Http\Controllers\Api;
+
+// use App\Http\Controllers\Controller;
+// use App\Models\Property;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Validator;
+// use Illuminate\Support\Facades\Log;
+// use Tymon\JWTAuth\Facades\JWTAuth;
+// use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+// use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+// use Tymon\JWTAuth\Exceptions\JWTException;
+
 // class PropertyController extends Controller
 // {
 //     public function __construct()
 //     {
-//         $this->middleware('auth:sanctum')->except(['optionsPreflight']);
-//     }
-
-//     // Handle OPTIONS preflight requests
-//     public function optionsPreflight()
-//     {
-//         return response()->json([], 200)
-//             ->header('Access-Control-Allow-Origin', '*')
-//             ->header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-//             ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+//         // Apply JWT auth middleware
+//         $this->middleware('jwt.auth');
 //     }
 
 //     public function addProperty(Request $request)
 //     {
-//         // Debug: Log incoming request details
-//         Log::debug('Property Add Request', [
-//             'headers' => $request->headers->all(),
-//             'token' => $request->bearerToken(),
-//             'ip' => $request->ip(),
-//             'user_agent' => $request->userAgent()
-//         ]);
+//         Log::info('addProperty method called.'); // Debug: Method entry point
 
-//         // Verify authentication
-//         if (!Auth::check()) {
-//             Log::error('Authentication Failed', [
-//                 'token_present' => $request->hasHeader('Authorization'),
-//                 'token' => $request->bearerToken(),
-//                 'expected_format' => 'Bearer {token_id}|{plain_text_token}'
-//             ]);
-            
+//         try {
+//             Log::info('Attempting to authenticate user via JWT.');
+
+//             // Attempt to authenticate the user
+//             $user = JWTAuth::parseToken()->authenticate();
+//             Log::info('User authenticated successfully.', ['user_id' => $user->id]);
+
+//         } catch (TokenExpiredException $e) {
+//             Log::error('Token has expired.', ['error' => $e->getMessage()]);
+
 //             return response()->json([
 //                 'status' => 'error',
-//                 'message' => 'Unauthenticated',
-//                 'debug' => 'Token validation failed. Please ensure you are sending the complete token in the Authorization header.'
+//                 'message' => 'Token has expired. Please login again.',
+//                 'debug' => $e->getMessage()
+//             ], 401);
+
+//         } catch (TokenInvalidException $e) {
+//             Log::error('Invalid token provided.', ['error' => $e->getMessage()]);
+
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Invalid token. Please login again.',
+//                 'debug' => $e->getMessage()
+//             ], 401);
+
+//         } catch (JWTException $e) {
+//             Log::error('JWT token not found or invalid.', ['error' => $e->getMessage()]);
+
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Token not provided or invalid.',
+//                 'debug' => $e->getMessage()
 //             ], 401);
 //         }
 
-//         // Validate request
+//         // Validate the request data
+//         Log::info('Validating request data.', ['request_data' => $request->all()]);
+
 //         $validator = Validator::make($request->all(), [
-//             'unit_number'     => 'required|string|max:255',
-//             'street_number'   => 'required|string|max:255',
-//             'street_name'     => 'required|string|max:255',
-//             'suburb'          => 'required|string|max:255',
-//             'state'           => 'required|string|max:255',
-//             'post_code'       => 'required|string|max:255',
-//             'country'         => 'required|string|max:255',
+//             'unit_number'   => 'required|string|max:255',
+//             'street_number' => 'required|string|max:255',
+//             'street_name'   => 'required|string|max:255',
+//             'suburb'        => 'required|string|max:255',
+//             'state'         => 'required|string|max:255',
+//             'post_code'     => 'required|string|max:255',
+//             'country'       => 'required|string|max:255',
 //         ]);
 
 //         if ($validator->fails()) {
-//             Log::warning('Validation failed', ['errors' => $validator->errors()]);
+//             Log::warning('Validation failed.', ['errors' => $validator->errors()->all()]);
+
 //             return response()->json([
 //                 'status' => 'error',
-//                 'message' => 'Validation failed',
-//                 'errors' => $validator->errors()
+//                 'message' => $validator->errors()->first(),
+//                 'debug' => $validator->errors()
 //             ], 422);
 //         }
 
 //         try {
-//             $user = Auth::user();
-//             Log::debug('Authenticated User', ['user_id' => $user->id, 'email' => $user->email]);
+//             Log::info('Creating new property record.');
 
+//             // Create the property
 //             $property = Property::create([
-//                 'user_id'        => $user->id,
-//                 'unit_number'    => $request->unit_number,
-//                 'street_number'  => $request->street_number,
-//                 'street_name'    => $request->street_name,
-//                 'suburb'         => $request->suburb,
-//                 'state'          => $request->state,
-//                 'postcode'       => $request->post_code,
-//                 'country'        => $request->country,
+//                 'user_id'       => $user->id,
+//                 'unit_number'   => $request->unit_number,
+//                 'street_number' => $request->street_number,
+//                 'street_name'   => $request->street_name,
+//                 'suburb'        => $request->suburb,
+//                 'state'         => $request->state,
+//                 'postcode'      => $request->post_code,
+//                 'country'       => $request->country,
 //             ]);
 
-//             Log::info('Property created successfully', ['property_id' => $property->id]);
+//             Log::info('Property created successfully.', ['property_id' => $property->id]);
 
 //             return response()->json([
 //                 'status' => 'success',
-//                 'message' => 'Property added successfully',
+//                 'message' => 'Property added successfully.',
 //                 'property_id' => $property->id
 //             ], 201);
 
 //         } catch (\Exception $e) {
-//             Log::error('Property Creation Error', [
-//                 'error' => $e->getMessage(),
-//                 'trace' => $e->getTraceAsString()
-//             ]);
+//             Log::error('Property creation failed.', ['error' => $e->getMessage()]);
 
 //             return response()->json([
 //                 'status' => 'error',
-//                 'message' => 'Server error while creating property',
-//                 'error_details' => config('app.debug') ? $e->getMessage() : null
+//                 'message' => 'Could not add property.',
+//                 'debug' => config('app.debug') ? $e->getMessage() : null
 //             ], 500);
 //         }
 //     }
 // }
+
+
