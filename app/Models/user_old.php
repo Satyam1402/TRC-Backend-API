@@ -10,10 +10,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-// use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -104,14 +104,14 @@ class User extends Authenticatable
     }
 
     // Add these two methods:
-    // public function getJWTIdentifier()
-    // {
-    //     return $this->getKey();
-    // }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 
-    // public function getJWTCustomClaims()
-    // {
-    //     return [];
-    // }
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
 }

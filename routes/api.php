@@ -29,18 +29,18 @@ Route::prefix('auth')->group(function () {
          ->middleware('throttle:5,1'); // 5 OTP attempts per minute
 
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword'])
-         ->middleware('throttle:3,1'); // 5 password reset attempts per minute    
+         ->middleware('throttle:3,1'); // 5 password reset attempts per minute
 });
 
 Route::prefix('countries')->group(function () {
-    Route::get('/', [LocationController::class, 'getCountryList']);
-    Route::get('/state_list', [LocationController::class, 'getStateList']);
+    Route::post('/', [LocationController::class, 'getCountryList']);
+    Route::post('/state_list', [LocationController::class, 'getStateList']);
 });
 
 Route::prefix('properties')->group(function () {
     Route::post('/add', [PropertyController::class, 'addProperty']);
-    Route::post('/add_resident_info', [PropertyController::class, 'addResidentInfo']);  
-    Route::get('/get_resident_info', [PropertyController::class, 'getResidentInfo']); 
+    Route::post('/add_resident_info', [PropertyController::class, 'addResidentInfo']);
+    Route::post('/get_resident_info', [PropertyController::class, 'getResidentInfo']);
     Route::post('/delete_resident_info', [PropertyController::class, 'deleteResidentInfo']);
 });
 
@@ -78,7 +78,7 @@ Route::prefix('properties')->group(function () {
 //         'token' => $token,
 //     ]);
 // });
- 
+
 //  Route::get('/debug-token', function (Request $request) {
 //     $authHeader = $request->header('Authorization');
 
