@@ -93,9 +93,9 @@
                 { data: 'street_number', name: 'street_number' },
                 { data: 'street_name', name: 'street_name' },
                 { data: 'suburb', name: 'suburb' },
-                { data: 'state', name: 'state' },
+                { data: 'state_id', name: 'state_id' },
                 { data: 'postcode', name: 'postcode' },
-                { data: 'country', name: 'country' },
+                { data: 'country_id', name: 'country_id' },
                 { data: 'contract_start_date', name: 'contract_start_date' },
                 { data: 'contract_end_date', name: 'contract_end_date' },
                 {
