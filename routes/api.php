@@ -38,8 +38,10 @@ Route::prefix('countries')->group(function () {
 });
 
 Route::prefix('properties')->group(function () {
-    Route::post('/add', [PropertyController::class, 'addProperty'])
-         ->middleware('throttle:5,1'); // You can adjust this as needed
+    Route::post('/add', [PropertyController::class, 'addProperty']);
+    Route::post('/add_resident_info', [PropertyController::class, 'addResidentInfo']);  
+    Route::get('/get_resident_info', [PropertyController::class, 'getResidentInfo']); 
+    Route::post('/delete_resident_info', [PropertyController::class, 'deleteResidentInfo']);
 });
 
 // Property Routes (Protected by Sanctum Authentication)
