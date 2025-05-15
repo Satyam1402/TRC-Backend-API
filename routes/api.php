@@ -3,14 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
-use App\Http\Controllers\Api\JwtAuthController;
+// use App\Http\Controllers\Api\JwtAuthController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\StaticContentController;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes - Sanctum Protected
+| API Routes - custom token Protected
 |--------------------------------------------------------------------------
 */
 
@@ -42,6 +42,7 @@ Route::prefix('properties')->group(function () {
     Route::post('/add', [PropertyController::class, 'addProperty']);
     Route::post('/add_resident_info', [PropertyController::class, 'addResidentInfo']);
     Route::post('/get_resident_info', [PropertyController::class, 'getResidentInfo']);
+    Route::post('/residents/update', [PropertyController::class, 'updateResidentInfo']);
     Route::post('/delete_resident_info', [PropertyController::class, 'deleteResidentInfo']);
     Route::get('content/{type}', [StaticContentController::class, 'getContent']);
 });
