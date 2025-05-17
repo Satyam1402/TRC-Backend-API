@@ -2,12 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Property;
 use App\Models\User;
-use App\Models\Country;
 use App\Models\State;
+use App\Models\Country;
+use App\Models\Property;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PropertySeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class PropertySeeder extends Seeder
 
         // Truncate the table (delete all records)
         Property::truncate();
-        
+
         // Re-enable foreign key checks
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Property;
 use App\Models\UserToken;
+use App\Models\User;
+use App\Models\UserReward;
 use Illuminate\Http\Request;
 use App\Models\ResidentsInfo;
+use App\Services\RewardService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -60,10 +63,15 @@ class PropertyController extends Controller
                 'user_id' => $userToken->user_id, // Assuming each property is linked to a user
             ]);
 
+            // Reward 1 star for adding a property
+            $user = $userToken->user;
+            RewardService::giveStar($user, 'add_property');
+
             // Return success response
             return response()->json([
                 'status' => 'success',
                 'message' => 'Property added successfully.',
+                'stars' => $user->stars,
             ], 200);
 
         } catch (Exception $e) {

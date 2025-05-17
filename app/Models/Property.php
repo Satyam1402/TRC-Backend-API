@@ -31,4 +31,9 @@ class Property extends Model
     {
         return $this->belongsTo(State::class, 'state_id');
     }
+
+    public function rentCollections()
+    {
+        return $this->hasMany(RentCollection::class, 'property_id');
+    }
 }

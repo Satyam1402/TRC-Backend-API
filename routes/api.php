@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ApiAuthController;
 // use App\Http\Controllers\Api\JwtAuthController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\StaticContentController;
 
 /*
@@ -45,6 +46,7 @@ Route::prefix('properties')->group(function () {
     Route::post('/residents/update', [PropertyController::class, 'updateResidentInfo']);
     Route::post('/delete_resident_info', [PropertyController::class, 'deleteResidentInfo']);
     Route::get('content/{type}', [StaticContentController::class, 'getContent']);
+    Route::get('/dashboard', [DashboardController::class, 'getDashboard']);
 });
 
 // Route::put('content/{type}', [StaticContentController::class, 'updateContent'])->middleware('auth:sanctum');
