@@ -34,4 +34,10 @@ class UserToken extends Model
     {
         return self::where('token', $token)->delete();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

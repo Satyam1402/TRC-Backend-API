@@ -65,13 +65,13 @@ class PropertyController extends Controller
 
             // Reward 1 star for adding a property
             $user = $userToken->user;
-            RewardService::giveStar($user, 'add_property');
+            RewardService::giveStar($user, 'add_property', $property->id, 'property');
 
             // Return success response
             return response()->json([
                 'status' => 'success',
                 'message' => 'Property added successfully.',
-                'stars' => $user->stars,
+                'stars'   => $user->fresh()->stars,
             ], 200);
 
         } catch (Exception $e) {
